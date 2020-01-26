@@ -1,0 +1,117 @@
+﻿@model CLM.Models.Cliente
+@using CLM.Services
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>Eliminar</h2>
+
+<h3>¿Está seguro de borrar este cliente?</h3>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd>
+            @(String.Format(new InterceptProvider(), "{0:U}", Model.Id))
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Tipo)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Tipo)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.NoCliente)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.NoCliente)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.FechaIngreso)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.FechaIngreso)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Phone)
+        </dt>
+        <dd>
+            <a href="tel:@(Model.Phone)">@Html.DisplayFor(model => model.Phone)</a>
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd>
+            <a href="mailto:@(Model.Email)">@Html.DisplayFor(model => model.Email)</a>
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Address)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Address)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Comuna)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Comuna.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ClaveFE)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ClaveFE)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ClaveSII)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ClaveSII)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Mensuales)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Mensuales)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Laborales)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Laborales)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Renta)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Renta)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Retencion)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Retencion)
+        </dd>
+    </dl>
+    @if (Model.Pagos.Count() > 0)
+    {
+        await Html.RenderPartialAsync("_StatusMessage",
+                                                        $@"ERROR: No es posible borrar al cliente<br />Existen {Model.Pagos.Count()} Pagos en la base de datos asociados al cliente");
+    }
+    else
+    {
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="Id" />
+            <input type="submit" value="Eliminar" class="btn btn-default" /> |
+            <a asp-action="Index">Volver al listado de clientes</a>
+        </form>
+    }
+</div>

@@ -1,0 +1,144 @@
+﻿@model CLM.Models.ViewModels.RetiroVM
+
+@{
+    ViewData["Title"] = "Retirar";
+}
+
+<h2>Retirar Fondos</h2>
+<hr />
+<div class="container">
+    <form asp-action="Create" class="form-horizontal">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        @for (var i = 0; i < Model.DisponibleVMs.Count(); i++)
+        {
+            <div id="oficina-@Model.DisponibleVMs[i].OficinaId" class="oficina hidden">
+                <div class="efectivo form-group hidden">
+                    <label asp-for="DisponibleVMs[i].Efectivo" class="control-label col-lg-4 col-md-6"></label>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fas fa-dollar-sign"></i></span>
+                            <input id="Efectivo-@Model.DisponibleVMs[i].OficinaId" asp-for="DisponibleVMs[i].Efectivo" class="form-control number currency disabled" readonly disabled />
+                        </div>
+                    </div>
+                </div>
+                <div class="cheque form-group hidden">
+                    <label asp-for="DisponibleVMs[i].Cheque" class="control-label col-lg-4 col-md-6"></label>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fas fa-dollar-sign"></i></span>
+                            <input id="Cheque-@Model.DisponibleVMs[i].OficinaId" asp-for="DisponibleVMs[i].Cheque" class="form-control number currency disabled" readonly disabled />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="form-group">
+            <label asp-for="OficinaId" class="control-label col-lg-4 col-md-6"></label>
+            <div class="col-lg-4 col-md-6">
+                <div class="input-group">
+                    <span class="input-group-addon"><i id="logo-medio" class="fas fa-money-bill-alt"></i></span>
+                    <select id="OficinaId"
+                            title="Seleccione Oficina"
+                            data-width="100%"
+                            asp-for="OficinaId"
+                            class="selectpicker form-control show-tick"
+                            data-live-search="true"
+                            asp-items="Model.OficinaList"></select>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Forma" class="control-label col-lg-4 col-md-6"></label>
+            <div class="col-lg-4 col-md-6">
+                <div class="input-group">
+                    <span class="input-group-addon"><i id="logo-medio" class="fas fa-money-bill-alt"></i></span>
+                    <select id="Forma"
+                            title="Seleccione Forma de Retiro"
+                            data-width="100%"
+                            asp-for="Forma"
+                            class="selectpicker form-control show-tick"
+                            data-live-search="true"
+                            asp-items="Model.FormaList"></select>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Monto" class="control-label col-lg-4 col-md-6"></label>
+            <div class="col-lg-4 col-md-6">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fas fa-dollar-sign"></i></span>
+                    <input asp-for="Monto" class="form-control number currency" />
+                </div>
+                <span asp-validation-for="Monto" class="text-danger"></span>
+                <span class="text-danger field-validation-valid" id="ErrMonto"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Detalles" class="control-label col-lg-4 col-md-6"></label>
+            <div class="col-lg-4 col-md-6">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fas fa-font"></i></span>
+                    <textarea asp-for="Detalles" class="form-control"></textarea>
+                </div>
+                <span asp-validation-for="Detalles" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-lg-4 col-md-6"></label>
+            <div class="col-lg-4 col-md-6">
+                <input type="submit" disabled value="Ingresar Retiro" class="btn btn-block btn-success" />
+            </div>
+        </div>
+    </form>
+</div>
+
+<div>
+    <a class="btn btn-default" asp-action="Index"><i class="fas fa-arrow-left fa-fw"></i>Volver a listado de Retiros</a>
+</div>
+<br />
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script type="text/javascript" src="~/js/parseNumber.js"></script>
+    <script>
+        $('#OficinaId').on('change', function () {
+            var forma = $('select#OficinaId').find(":selected")[0].value;
+            $('.oficina').addClass('hidden');
+            $('#oficina-' + forma).removeClass('hidden');
+        });
+
+        $('#Forma').on('change', function () { 
+            var forma = $('select#Forma').find(":selected")[0].value;
+            if (forma == "Efectivo") {
+                $('.efectivo').removeClass('hidden');
+                $('.cheque').addClass('hidden');
+            } else if (forma == "Cheque") {
+                $('.efectivo').addClass('hidden');
+                $('.cheque').removeClass('hidden');
+            }
+        });
+
+        $('#Monto').keyup(function () {
+            var ofsel = $('select#OficinaId').find(":selected")[0];
+            var formsel = $('select#Forma').find(":selected")[0];
+            if ($(ofsel).hasClass('bs-title-option') || $(formsel).hasClass('bs-title-option')) {
+                this.value = '';
+                return alert("Elija una oficina y forma de retiro");
+            }
+            var oficina = ofsel.value;
+            var forma = formsel.value;
+            var disponible = $('input#' + forma + '-' + oficina)[0].value.replace(/[\D\s\._\-]+/g, "");
+            var solicitado = this.value.replace(/[\D\s\._\-]+/g, "");
+            console.log(solicitado);
+            if (solicitado > disponible || solicitado == '') {
+                $(this).parents(".form-group").addClass("has-error");
+                $('#ErrMonto').html("No hay suficientes fondos");
+                $("input[type=submit]").prop('disabled', true);
+            } else { 
+                $(this).parents(".form-group").removeClass("has-error");
+                $('#ErrMonto').html("");
+                $("input[type=submit]").prop('disabled', false);
+            }
+        });
+    </script>
+}

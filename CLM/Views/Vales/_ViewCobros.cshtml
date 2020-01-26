@@ -1,0 +1,66 @@
+﻿@model Vale
+@using CLM.Models.ViewModels
+@using System.ComponentModel.DataAnnotations;
+
+@Html.Partial("_ModalHeader", new ModalHeader { Heading = "Detalle de cobro" })
+
+<table class="table">
+    <thead>
+        <tr>
+            <th colspan="2">
+                @Html.DisplayNameFor(model => model.Id): @Html.DisplayFor(model => model.Id)
+            </th>
+        </tr>
+        <tr>
+            <td colspan="2">
+                @Html.DisplayFor(model => model.Date)
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Cobro
+            </th>
+            <th style="text-align:right">
+                Monto
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Cobros)
+    {
+        <tr>
+            <td>
+                @{
+                var displayName = (DisplayAttribute)item.Honorario.GetType().GetMember(item.Honorario.ToString())[0].GetCustomAttributes(typeof(DisplayAttribute), false).First();
+                }
+                @displayName.Name.ToString()
+            </td>
+            <td style="text-align:right">
+                @Html.DisplayFor(modelItem => item.Monto)
+            </td>
+        </tr>
+}
+    </tbody>
+    <tfoot>
+        <tr class="danger">
+            <td>
+                <strong>@Html.DisplayNameFor(model => model.SubTotal)</strong>
+            </td>
+            <td style="text-align:right">
+                <strong>@Html.DisplayFor(model => model.SubTotal)</strong>
+            </td>
+        </tr>
+        <tr class="alert-info">
+            <td colspan="2">
+                @Html.DisplayNameFor(model => model.ClienteId): @Html.DisplayFor(model => model.Cliente.Name)
+            </td>
+        </tr>
+        <tr class="alert-info">
+            <td colspan="2">
+                @Html.DisplayNameFor(model => model.ApplicationUserId): @Html.DisplayFor(model => model.ApplicationUser.UserName)
+            </td>
+        </tr>
+    </tfoot>
+</table>
+
+@Html.Partial("_ModalFooter", new ModalFooter { OnlyCancelButton = true, CancelButtonText = "Aceptar" })

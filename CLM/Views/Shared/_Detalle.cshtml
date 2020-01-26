@@ -1,0 +1,55 @@
+﻿@model Detalle
+@using CLM.Models.ViewModels
+
+<table class="table">
+    <colgroup>
+        <col span="1" style="width: 70%;">
+        <col span="1" style="width: 10%;">
+        <col span="1" style="width: 20%;">
+    </colgroup>
+    <thead>
+        <tr>
+            <th>
+                Cobro
+            </th>
+            <th colspan="2" style="text-align:right">
+                Monto
+            </th>
+        </tr>
+    </thead>
+    <tbody id="cobros">@Html.Raw(Model.Cobros)</tbody>
+    <tfoot>
+        <tr class="info" style="border-top: solid">
+            <td>
+                <strong>SubTotal</strong>
+            </td>
+            <td><i class="fas fa-dollar-sign"></i></td>
+            <td style="text-align:right">
+                <strong id="SubTotal"></strong>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Saldos
+            </td>
+            <td><i class="fas fa-dollar-sign"></i></td>
+            <td id="Saldos" style="text-align:right">@Model.Saldos</td>
+        </tr>
+        <tr style="font-size:xx-small">
+            <td>
+                *Detalle de Saldos
+            </td>
+            <td></td>
+            <td id="DetalleSaldos" style="text-align:right">@Model.Emitidos</td>
+        </tr>
+        <tr class="danger" style="border-top: solid">
+            <td>
+                <strong>TOTAL</strong>
+            </td>
+            <td><i class="fas fa-dollar-sign"></i></td>
+            <td style="text-align:right">
+                <strong id="Total">@Model.Total</strong>
+            </td>
+        </tr>
+    </tfoot>
+</table>

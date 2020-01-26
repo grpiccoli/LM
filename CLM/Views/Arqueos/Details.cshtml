@@ -1,0 +1,48 @@
+﻿@model CLM.Models.Arqueo
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Arqueo</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ApplicationUserId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ApplicationUserId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DifEfectivo)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DifEfectivo)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DifTransferencia)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DifTransferencia)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DifCheque)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DifCheque)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

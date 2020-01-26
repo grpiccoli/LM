@@ -1,0 +1,262 @@
+﻿@model PagoViewModel
+@using CLM.Models.ViewModels
+@{
+    ViewData["Title"] = "Pagar";
+}
+
+<h2>Caja: Emitir Pago</h2>
+<hr />
+<div class="container">
+    <div class="col-lg-12">
+        <div class="row">
+            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <figure>
+                    <img src="~/images/logo.svg" style="width:300px" />
+                </figure>
+            </div>
+            <div class="col-lg-8 col-md-6 col-sm-12 col-xs-12">
+                @{await Html.RenderPartialAsync("_Datos");}
+            </div>
+        </div>
+        <form asp-action="Create" class="form-horizontal">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Fecha" class="control-label col-lg-4 col-md-6"></label>
+                <div class="col-lg-4 col-md-6">
+                    <div class="input-group">
+                        <span id="btnFecha" class="input-group-addon"><i class="far fa-calendar-alt"></i></span>
+                        <input asp-for="Fecha" class="form-control" />
+                    </div>
+                    <span asp-validation-for="Fecha" class="text-danger"></span>
+                </div>
+            </div>
+            <div id="errNoVales" class="form-group hidden">
+                @{await Html.RenderPartialAsync("_StatusMessage",
+                                                      $@"ERROR: No se han emitido vales con la fecha seleccionada <br />Por favor ingrese una fecha válida");}
+            </div>
+            <div id="ValesList" class="hidden">
+                <div class="form-group">
+                    <label asp-for="ValesList" class="control-label col-lg-4 col-md-6"></label>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fas fa-barcode"></i></span>
+                            <select id="vales"
+                                    title="Seleccione Vale a Cancelar"
+                                    asp-for="ValeId"
+                                    data-width="100%"
+                                    class="form-control selectpicker"
+                                    data-live-search="true"
+                                    asp-items="Model.ValesList"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="detalles hidden">
+                <div class="form-group">
+                    <label class="control-label col-lg-4 col-md-6">DETALLE</label>
+                    <div class="col-lg-4 col-md-6">
+                        @{ await Html.RenderPartialAsync("_Detalle", new Detalle { Cobros = "", Emitidos ="", Saldos="", Total ="" });}
+                    </div>
+                </div>
+                @if (Model.OficinasList.Count() > 1)
+                {
+                    <div class="form-group">
+                        <label asp-for="OficinasList" class="control-label col-lg-4 col-md-6"></label>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fas fa-door-closed"></i></span>
+                                <select id="oficinas"
+                                        title="Seleccione Oficina que recibe el pago"
+                                        asp-for="OficinaId"
+                                        data-width="100%"
+                                        class="form-control selectpicker"
+                                        data-live-search="true"
+                                        asp-items="Model.OficinasList"></select>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div class="form-group">
+                    <label asp-for="Medio" class="control-label col-lg-4 col-md-6"></label>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i id="logo-medio" class="fas fa-money-bill-alt"></i></span>
+                            <select id="medio"
+                                    title="Seleccione Medio de Pago"
+                                    data-width="100%"
+                                    asp-for="Medio"
+                                    class="selectpicker form-control"
+                                    asp-items="Model.MediosList"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Monto" class="control-label col-lg-4 col-md-6"></label>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fas fa-dollar-sign"></i></span>
+                            <input style="text-align:right;" asp-for="Monto" class="form-control" />
+                        </div>
+                        <span asp-validation-for="Monto" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label id="Saldo" asp-for="Saldo" class="control-label col-lg-4 col-md-6"></label>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fas fa-dollar-sign"></i></span>
+                            <input asp-for="Saldo" style="text-align:right;" class="form-control" readonly />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="transferencia" class="hidden">
+                <div class="form-group">
+                    <label asp-for="FechaTransferencia" class="control-label col-lg-4 col-md-6"></label>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="input-group">
+                            <span id="btnFechaTransferencia" class="input-group-addon"><i class="far fa-calendar-alt"></i></span>
+                            <input asp-for="FechaTransferencia" class="form-control" />
+                        </div>
+                        <span asp-validation-for="FechaTransferencia" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="RUT" class="control-label col-lg-4 col-md-6"></label>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="far fa-id-card"></i></span>
+                            <input asp-for="RUT" class="form-control" />
+                        </div>
+                        <span asp-validation-for="RUT" class="text-danger"></span>
+                        <br />
+                        <span id="error-rut" class="text-danger"></span>
+                        <input id="Name" class="form-control" readonly />
+                    </div>
+                </div>
+                <input asp-for="ClienteId" class="form-control hidden" readonly />
+            </div>
+            <div class="form-group detalles hidden">
+                <label class="control-label col-lg-4 col-md-6"></label>
+                <div class="col-lg-4 col-md-6">
+                    <input type="submit" value="Cargar Pago" class="btn btn-primary btn-block" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a class="btn btn-default" asp-action="Index"><i class="fas fa-arrow-left fa-fw"></i>Volver al Listado</a>
+</div>
+<br />
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_DateTimePicker",Model.AvailableDates);
+    }
+    <script src="~/js/modal-action.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/js/jquery.rut.js"></script>
+    <script type="text/javascript" src="~/js/get-sii-rut-data.js"></script>
+    <script>
+        function getVales() {
+            var vales = '@Url.Action("GetValesByDate","Pagos", new { date = "FECHA" })';
+            vales = vales.replace("FECHA", $('input#Fecha')[0].value);
+            $.get(vales, {}, function (r) {
+                if (r.length === 0) {
+                    $("div#errNoVales").removeClass('hidden');
+                    $('div#ValesList').addClass('hidden');
+                    $("div.detalles").addClass('hidden');
+                } else {
+                    $("div#errNoVales").addClass('hidden');
+                    $('select#vales').find('option').remove().end();
+                    $.each(r, function () {
+                        $('select#vales').append(
+                            $("<option></option>").text(this.text).val(this.value)
+                        );
+                    });
+                    $('div#ValesList').removeClass('hidden');
+                }
+                $('select#vales').selectpicker("refresh");
+            });
+        }
+        $(document).ready(function () {
+            getVales();
+        });
+        $('input#Fecha').on('change', function () {
+            getVales();
+            var date = $('input#Fecha')[0].value.split("-");
+            $("#FechaTransferencia").datepicker("option", "minDate", new Date(date[2], date[1] - 1, date[0]) );
+        });
+        function getValeById() {
+            var vale = '@Url.Action("GetValeById","Pagos", new { id = "ID" })';
+            var id = $('select#vales').find(":selected")[0].value;
+            vale = vale.replace("ID", id);
+            $.get(vale, {}, function (r) {
+                if (r.length === 0) {
+                    alert("ERROR: No se encuentra el vale solicitado, favor emitir Vale nuevamente");
+                }
+                $.each(r.cobros, function (index, element) {
+                    $('tbody#cobros').append('<tr><td>' + index + '</td><td><i class="fas fa-dollar-sign"></i></td><td style="text-align:right">' + element.toLocaleString("es-CL") +'</td></tr>');
+                });
+                var emitidos = [];
+                //var emitidos = ['<a class="btn btn-xs" title="$ ' + r.saldoInicial.toLocaleString("es-CL") + '">Saldo Inicial: $' + r.saldoInicial.toLocaleString("es-CL")+'</a>'];
+                $.each(r.valesEmitidos, function (i, e) {
+                    emitidos.push('<a id="cobrosModal" class="btn btn-xs" data-toggle="modal" data-target="#modal-action" href="/Vales/ViewCobros/' + e.id + '">Vale <i class="fas fa-hashtag"></i>'+ e.id +'</a>');
+                });
+                $('td#DetalleSaldos').append(emitidos.join("<br/>"));
+                $('td#Saldos').html(r.saldosPendientes.toLocaleString("es-CL"));
+                $('td strong#Total').html(r.total.toLocaleString("es-CL"));
+                $('td strong#SubTotal').html(r.subTotal.toLocaleString("es-CL"));
+                $('input#ClienteId').val(r.clienteId);
+                $('div.detalles').removeClass('hidden');
+            });
+        }
+        $('select#vales').on('change', function () {
+            $("div.detalles").addClass('hidden');
+            getValeById();
+        });
+        $('input#Monto').keyup(function () {
+            var input = $(this).val().replace(/[\D\s\._\-]+/g, "");
+            input = input ? parseInt(input) : 0;
+            $(this).val(function () {
+                    return (input === 0) ? "" : input.toLocaleString("es-CL");
+            });
+            var total = $('td strong#Total').html().replace(/[\D\s\._\-]+/g, "");
+            total = total ? parseInt(total) : 0;
+            var saldo = total - input;
+            $('input#Saldo').val(saldo.toLocaleString("es-CL"));
+            $('input#Saldo').removeClass('alert-primary');
+            if (saldo >= 0) {
+                $('input#Saldo').removeClass('alert-success');
+                $('input#Saldo').addClass('alert-danger');
+                $('label#Saldo').html('Saldo Pendiente');
+            } else {
+                $('input#Saldo').removeClass('alert-danger');
+                $('input#Saldo').addClass('alert-success');
+                $('label#Saldo').html('Saldo a Favor');
+            }
+        });
+        $('select#medio').on('change', function () {
+            var medio = $('select#medio').find(":selected")[0].value;
+            $('#logo-medio').removeClass('fa-money-bill-alt');
+            $('#logo-medio').removeClass('fa-university');
+            $('#logo-medio').removeClass('fa-credit-card');
+            if (medio === "Transferencia") {
+                $('div#transferencia').removeClass('hidden');
+                $('#logo-medio').addClass('fa-university');
+            } else {
+                $('div#transferencia').addClass('hidden');
+                if (medio === "Efectivo") {
+                    $('#logo-medio').addClass('fa-money-bill-alt');
+                }
+                if (medio === "Cheque") {
+                    $('#logo-medio').addClass('fa-credit-card');
+                }
+            }
+        });
+    </script>
+}
+
+@Html.Partial("_Modal", new BootstrapModel { ID = "modal-action", AreaLabeledId = "modal-action-label", Size = ModalSize.Medium })

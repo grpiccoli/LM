@@ -1,0 +1,246 @@
+﻿@model CLM.Models.ClienteViewModel
+
+@{
+    ViewData["Title"] = "Editar Cliente";
+}
+
+<div class="container">
+    <h2>Editar Cliente</h2>
+    <hr />
+    <form asp-action="Edit" class="form-horizontal">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input asp-for="RUT" type="hidden" />
+        <div class="form-group">
+            <label class="control-label col-lg-4 col-md-6"></label>
+            <div class="col-lg-6 col-md-6">
+                <table class="table table-condensed table-responsive">
+                    <tr>
+                        <td>
+                            RUT
+                        </td>
+                        <td><i class="far fa-id-card"></i></td>
+                        <td>
+                            @Html.DisplayFor(modelItem => Model.RUT)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Fecha de Ingreso
+                        </td>
+                        <td><i class="far fa-calendar-alt"></i></td>
+                        <td>
+                            @Html.DisplayFor(modelItem => Model.FechaIngreso)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Añadido por
+                        </td>
+                        <td><i class="fas fa-user-circle"></i></td>
+                        <td>
+                            @Html.DisplayFor(modelItem => Model.Editor)
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="GirosId" class="control-label col-lg-4 col-md-6"></label>
+            <div class="col-lg-6 col-md-6">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fas fa-briefcase"></i></span>
+                    <select id="Giros" title="Seleccione Giros" data-width="100%" class="selectpicker form-control"
+                            data-live-search="true" data-size="5" multiple asp-for="GirosId" asp-items="Model.GirosList" disabled></select>
+                    <span class="input-group-btn">
+                        <button type="button" id="refresh1" onclick="refresH()" class="btn btn-success"><i class="fas fa-sync-alt"></i></button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Name" class="control-label col-lg-4 col-md-6"></label>
+            <div class="col-lg-6 col-md-6">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fas fa-user-circle"></i></span>
+                    <input asp-for="Name" class="form-control" readonly />
+                    <span class="input-group-btn">
+                        <button type="button" id="refresh2" onclick="refresH()" class="btn btn-success"><i class="fas fa-sync-alt"></i></button>
+                    </span>
+                </div>
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Mensuales" class="control-label col-lg-4 col-md-6"></label>
+            <div class="col-lg-6 col-md-6">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fas fa-dollar-sign"></i></span>
+                    <input asp-for="Mensuales" class="form-control currency number" />
+                </div>
+                <span asp-validation-for="Mensuales" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Laborales" class="control-label col-lg-4 col-md-6"></label>
+            <div class="col-lg-6 col-md-6">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fas fa-dollar-sign"></i></span>
+                    <input asp-for="Laborales" class="form-control currency number" />
+                </div>
+                <span asp-validation-for="Laborales" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Renta" class="control-label col-lg-4 col-md-6"></label>
+            <div class="col-lg-6 col-md-6">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fas fa-dollar-sign"></i></span>
+                    <input asp-for="Renta" class="form-control currency number" />
+                </div>
+                <span asp-validation-for="Renta" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Retencion" class="control-label col-lg-4 col-md-6"></label>
+            <div class="col-lg-6 col-md-6">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fas fa-dollar-sign"></i></span>
+                    <input asp-for="Retencion" class="form-control currency number" />
+                </div>
+                <span asp-validation-for="Retencion" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="SaldoInicial" class="control-label col-lg-4 col-md-6"></label>
+            <div class="col-lg-6 col-md-6">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fas fa-dollar-sign"></i></span>
+                    <input asp-for="SaldoInicial" class="form-control currency number" />
+                </div>
+                <span asp-validation-for="SaldoInicial" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="NoCliente" class="control-label col-lg-4 col-md-6"></label>
+            <div class="col-lg-6 col-md-6">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fab fa-slack-hash"></i></span>
+                    <input asp-for="NoCliente" class="form-control" />
+                </div>
+                <span asp-validation-for="NoCliente" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Phone" class="control-label col-lg-4 col-md-6"></label>
+            <div class="col-lg-6 col-md-6">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fas fa-phone"></i></span>
+                    <input asp-for="Phone" class="form-control" />
+                </div>
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Email" class="control-label col-lg-4 col-md-6"></label>
+            <div class="col-lg-6 col-md-6">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fas fa-at"></i></span>
+                    <input asp-for="Email" class="form-control" />
+                </div>
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Tipo" class="control-label col-lg-4 col-md-6"></label>
+            <div class="col-lg-6 col-md-6">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fas fa-users"></i></span>
+                    <select data-width="100%" title="Seleccione Persona" class="form-control" asp-for="Tipo" asp-items="Model.TiposList"></select>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Address" class="control-label col-lg-4 col-md-6"></label>
+            <div class="col-lg-6 col-md-6">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fas fa-map-marker"></i></span>
+                    <input asp-for="Address" class="form-control" />
+                </div>
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="ComunaId" class="control-label col-lg-4 col-md-6"></label>
+            <div class="col-lg-6 col-md-6">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fas fa-map-marker"></i></span>
+                    <select id="Comunas" title="Seleccione Comuna" data-width="100%" class="selectpicker form-control"
+                            data-live-search="true" asp-for="ComunaId" asp-items="Model.ComunasList" data-size="5"></select>
+                </div>
+                <span asp-validation-for="ComunaId" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="ClaveFE" class="control-label col-lg-4 col-md-6"></label>
+            <div class="col-lg-6 col-md-6">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fas fa-key"></i></span>
+                    <input asp-for="ClaveFE" class="form-control" />
+                </div>
+                <span asp-validation-for="ClaveFE" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="ClaveSII" class="control-label col-lg-4 col-md-6"></label>
+            <div class="col-lg-6 col-md-6">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fas fa-key"></i></span>
+                    <input asp-for="ClaveSII" class="form-control" />
+                </div>
+                <span asp-validation-for="ClaveSII" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-lg-4 col-md-6"></label>
+            <div class="col-lg-6 col-md-6">
+                <input type="submit" value="Guardar" class="btn btn-block btn-primary" />
+            </div>
+        </div>
+    </form>
+
+    <div>
+        <a class="btn btn-default" asp-action="Index"><i class="fas fa-arrow-left fa-fw"></i>Volver al listado de clientes</a>
+    </div>
+    <br />
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBzeURw_cWYOrhTU1TYBRGcD-hDtFMw5JI&region=CL&libraries=places&language=es"></script>
+    <script type="text/javascript" src="~/js/gmaps-address-autocomplete.js"></script>
+    <script type="text/javascript" src="~/js/format-phone.js"></script>
+    <script type="text/javascript" src="~/js/sendDisabledSelects.js"></script>
+    <script type="text/javascript" src="~/js/parseNumber.js"></script>
+    <script>
+        function refresH() {
+            var url = "/Clientes/ClientExists/RUT";
+            url = url.replace("RUT", $('form input#RUT').val().replace(new RegExp("-.*"), "").replace(new RegExp("\\.", "g"), ""));
+            $.get(url, {}, function (r) {
+                $.getJSON('https://siichile.herokuapp.com/consulta', { rut: $('#RUT').val().replace(/[^0-9Kk]/g, '') },
+                    function (result) {
+                        $('#Name').val(toTitleCase(result.razon_social.toString().toLowerCase()));
+                        $('#Giros.selectpicker').selectpicker('val', result.actividades.map(a => a.codigo));
+                        $('#refresh1').attr('disabled', 'disabled');
+                        $('#refresh2').attr('disabled', 'disabled');
+                    });
+            });
+        }
+
+        //To Title case function
+        function toTitleCase(str) {
+            return str.replace(/(?:^|\s)\w/g, function (match) {
+                return match.toUpperCase();
+            });
+        }
+    </script>
+}

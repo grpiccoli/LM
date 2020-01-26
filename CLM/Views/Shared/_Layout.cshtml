@@ -1,0 +1,171 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="google-site-verification" content="2bZXaiwBYIeny0njzJG_ZhlT8JfWmkG4Csjh9rS32hY" />
+    <title>@ViewData["Title"] - CLM</title>
+    <!-- Custom Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    </environment>
+    <link rel="stylesheet" href="~/lib/bootstrap-select/dist/css/bootstrap-select.css" />
+    <link rel="stylesheet" href="~/lib/jquery-ui/themes/base/jquery-ui.css" />
+    <script defer src="https://use.fontawesome.com/releases/v5.0.2/js/all.js"></script>
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown">
+                            <a class="navbar-brand dropdown-toggle" data-toggle="dropdown">CLM<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a asp-area="" asp-controller="Home" asp-action="Index">Inicio</a></li>
+                                <li><a asp-area="" asp-controller="Home" asp-action="Index" asp-fragment="about">Nosotros</a></li>
+                                <li><a asp-area="" asp-controller="Home" asp-action="Index" asp-fragment="services">Servicios</a></li>
+                                <li><a asp-area="" asp-controller="Home" asp-action="Index" asp-fragment="contact">Contacto</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Herramientas<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                @if (User.Claims.Any(c => c.Value == "Clientes"))
+                                {
+                                    <li role="separator" class="divider"></li>
+                                    <li class="dropdown-header">Clientes:</li>
+                                    <li><a asp-area="" asp-controller="Clientes" asp-action="Index">Administración Clientes</a></li>
+                                }
+                                @if (User.Claims.Any(c => c.Value == "Vale"))
+                                {
+                                    <li role="separator" class="divider"></li>
+                                    <li class="dropdown-header">Vale Caja:</li>
+                                    <li><a asp-area="" asp-controller="Vales" asp-action="Index">Vales Caja</a></li>
+                                }
+                                @*@if (User.Claims.Any(c => c.Value == "Historial"))
+                                {
+                                    <li><a asp-area="" asp-controller="Vales" asp-action="Historial">Historial de Vales</a></li>
+                                    <li><a asp-area="" asp-controller="Pagos" asp-action="Historial">Historial de Pagos</a></li>
+                                }*@
+                                <li role="separator" class="divider"></li>
+                                <li class="dropdown-header">Caja:</li>
+                                @if (User.Claims.Any(c => c.Value == "CajaPago"))
+                                {
+                                    <li class="btn-default"><a asp-area="" asp-controller="Pagos" asp-action="Index">Pagos</a></li>
+                                }
+                                @if (User.Claims.Any(c => c.Value == "Retiros"))
+                                {
+                                    <li><a asp-area="" asp-controller="Retiros" asp-action="Index">Retiros</a></li>
+                                }
+                                @if (User.Claims.Any(c => c.Value == "Arqueo"))
+                                {
+                                    <li><a asp-area="" asp-controller="Arqueos" asp-action="Index">Arqueo de Caja</a></li>
+                                }
+                            </ul>
+                        </li>
+                    </ul>
+                    @if (User.IsInRole("Administrador") || User.IsInRole("Editor") || User.IsInRole("Invitado"))
+                    {
+                        <ul class="nav navbar-nav">
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="glyphicon glyphicon-cog"></i> Administraci&oacute;n<span class="caret"></span></a>
+                                <ul class="dropdown-menu hover">
+                                    <li class="dropdown-header">Bases de Datos:</li>
+                                    @if (User.Claims.Any(c => c.Value == "Usuarios"))
+                                    {
+                                        <li class="divider" role="separator"></li>
+                                        <li class="dropdown-header">Administraci&oacute;n de usuarios:</li>
+                                        <li><a asp-area="" asp-controller="ApplicationUsers" asp-action="Index">Usuarios y Permisos</a></li>
+                                        <li><a asp-area="" asp-controller="ApplicationRoles" asp-action="Index">Roles</a></li>
+                                        <li><a asp-area="" asp-controller="Oficinas" asp-action="Index">Oficinas</a></li>
+                                    }
+                                </ul>
+                            </li>
+                        </ul>
+                    }
+                    @await Html.PartialAsync("_LoginPartial")
+                </div>
+            }
+            else
+            {
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">CLM</a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a asp-area="" asp-controller="Home" asp-action="Index">Inicio</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="Index" asp-fragment="about">Nosotros</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="Index" asp-fragment="services">Servicios</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="Index" asp-fragment="contact">Contacto</a></li>
+                    </ul>
+                    @await Html.PartialAsync("_LoginPartial")
+                </div>
+            }
+        </div>
+    </nav>
+    <div class="container-fluid body-content">
+        @RenderBody()
+        <footer>
+            <p class="copyright text-muted small"><a target="_blank" href="https://cl.linkedin.com/in/guillermo-rodriguez-piccoli">Guillermo Rodr&iacute;guez Piccoli</a> &mdash; Copyright &copy; Contabilidad Los Muermos 2018. Derechos Reservados</p>
+        </footer>
+    </div>
+
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery"
+                crossorigin="anonymous"
+                integrity="sha384-K+ctZQ+LL8q6tP7I94W+qzQsfRV2a+AfHIi9k8z8l9ggpc8X+Ytst4yBo/hH+8Fk">
+        </script>
+        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
+                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+                crossorigin="anonymous"
+                integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
+        </script>
+        <script src="~/js/site.min.js" asp-append-version="true"></script>
+    </environment>
+    <script type="text/javascript" src="~/lib/jquery-ui/jquery-ui.js"></script>
+    <script type="text/javascript" src="~/lib/jquery-ui/ui/i18n/datepicker-es.js"></script>
+    <script src="~/lib/bootstrap-select/dist/js/bootstrap-select.js"></script>
+    <script src="~/lib/bootstrap-select/dist/js/i18n/defaults-es_CL.js"></script>
+    <script type="text/javascript" src="~/js/dontSendFormOnEnter.js"></script>
+    @RenderSection("Scripts", required: false)
+    @this.WriteScriptBlocks()
+</body>
+</html>

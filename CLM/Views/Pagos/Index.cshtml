@@ -1,0 +1,243 @@
+﻿@model IEnumerable<CLM.Models.Pago>
+@using CLM.Models.ViewModels
+@using CLM.Services
+
+@{
+    ViewData["Title"] = "Pagos";
+    var lng = Model.Count().ToString().Length;
+    var id = ViewContext.RouteData.Values["id"];
+    var rpp = ViewData["rpp"] as string;
+    var pg = ViewData["pg"] as string;
+    var asc = ViewData["asc"] as string;
+    var srt = ViewData["srt"] as string;
+    var last = ViewData["last"] as string;
+    var _asc = Convert.ToBoolean(asc);
+    var Filters = ViewData["Filters"] as IDictionary<string, List<string>>;
+    var val = ViewData["val"] as string;
+    var controller = this.ViewContext.RouteData.Values["controller"].ToString();
+    var action = this.ViewContext.RouteData.Values["action"].ToString();
+}
+
+@section Styles{
+    <link rel="stylesheet" href="~/css/dinamicTable.css" />
+}
+<div class="beforeDT">
+    <div class="col-lg-2 col-md-4 col-sm-8 col-xs-12">
+        <h1>Pagos</h1>
+    </div>
+    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-3">
+        @await Html.PartialAsync("_ClearFilters", Url.RouteUrl(this.ViewContext.RouteData.Values))
+    </div>
+    <div class="col-lg-9 col-md-7 col-sm-3 col-xs-9">
+        <span class="">
+            <a class="btn btn-block btn-success" asp-action="Create">Ingresar nuevo pago</a>
+        </span>
+    </div>
+
+    @await Html.PartialAsync("_Paging", new PagingPartial
+    {
+        Pg = Convert.ToInt32(pg),
+        Action = action,
+        Asc = _asc,
+        Controller = controller,
+        Last = Convert.ToInt32(last),
+        Rpp = Convert.ToInt32(rpp),
+        Srt = srt
+    })
+</div>
+<div id="constrainer2">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @await Html.PartialAsync("_TableFilter",new TableFilterVM
+               {
+                   //fixed
+                   Srt = srt,
+                   Asc = _asc,
+                   Rpp = rpp,
+                   Controller = controller,
+                   Action = action,
+                   //config
+                   Id = "Id",
+                   Name = Html.DisplayNameFor(model => model.Id),
+               })
+                </th>
+                <th>
+                    @await Html.PartialAsync("_TableFilter",new TableFilterVM
+               {
+                   //fixed
+                   Srt = srt,
+                   Asc = _asc,
+                   Rpp = rpp,
+                   Controller = controller,
+                   Action = action,
+                   //config
+                   Id = "OficinaId",
+                   Name = Html.DisplayNameFor(model => model.OficinaId),
+                   MaxOptions = 10,
+                   Type = FilterType.select
+               })
+                </th>
+                <th>
+                    @await Html.PartialAsync("_TableFilter",new TableFilterVM
+               {
+                   //fixed
+                   Srt = srt,
+                   Asc = _asc,
+                   Rpp = rpp,
+                   Controller = controller,
+                   Action = action,
+                   //config
+                   Id = "Medio",
+                   Name = Html.DisplayNameFor(model => model.Medio),
+                   MaxOptions = Enum.GetNames(typeof(Medio)).Length,
+                   Type = FilterType.select
+               })
+                </th>
+                <th>
+                    @await Html.PartialAsync("_TableFilter",new TableFilterVM
+               {
+                   //fixed
+                   Srt = srt,
+                   Asc = _asc,
+                   Rpp = rpp,
+                   Controller = controller,
+                   Action = action,
+                   //config
+                   Id = "ClienteId",
+                   Name = Html.DisplayNameFor(model => model.ClienteId),
+                   MaxOptions = 10,
+                   LiveSearch = true,
+                   Type = FilterType.select
+               })
+                </th>
+                <th>
+                    @await Html.PartialAsync("_TableFilter",new TableFilterVM
+               {
+                   //fixed
+                   Srt = srt,
+                   Asc = _asc,
+                   Rpp = rpp,
+                   Controller = controller,
+                   Action = action,
+                   //config
+                   Id = "ApplicationUserId",
+                   Name = Html.DisplayNameFor(model => model.ApplicationUserId),
+                   MaxOptions = 10,
+                   LiveSearch = true,
+                   Type = FilterType.select
+               })
+                </th>
+                <th>
+                    @await Html.PartialAsync("_TableFilter",new TableFilterVM
+               {
+                   //fixed
+                   Srt = srt,
+                   Asc = _asc,
+                   Rpp = rpp,
+                   Controller = controller,
+                   Action = action,
+                   //config
+                   Id = "Date",
+                   Val = Filters.ContainsKey("Date") ? Filters["Date"].First() : Html.DisplayNameFor(model => model.Date),
+                   Name = Html.DisplayNameFor(model => model.Date),
+                   Type = FilterType.date
+               })
+                </th>
+                <th>
+                    @await Html.PartialAsync("_TableFilter",new TableFilterVM
+               {
+                   //fixed
+                   Srt = srt,
+                   Asc = _asc,
+                   Rpp = rpp,
+                   Controller = controller,
+                   Action = action,
+                   //config
+                   Id = "Monto",
+                   Name = Html.DisplayNameFor(model => model.Monto),
+               })
+                </th>
+                <th>
+                    @await Html.PartialAsync("_TableFilter",new TableFilterVM
+               {
+                   //fixed
+                   Srt = srt,
+                   Asc = _asc,
+                   Rpp = rpp,
+                   Controller = controller,
+                   Action = action,
+                   //config
+                   Id = "Vales",
+                   Name = Html.DisplayNameFor(model => model.Vales),
+               })
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Oficina.Name)
+                    <br />
+                    Dirección: @Html.DisplayFor(modelItem => item.Oficina.Address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Medio)
+                </td>
+                <td>
+                    Cliente: @Html.DisplayFor(modelItem => item.Cliente.NoCliente)
+                    <br />
+                    RUT: @String.Format(new InterceptProvider(), "{0:U}", item.ClienteId)
+                    <br />
+                    Nombre: @Html.DisplayFor(modelItem => item.Cliente.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ApplicationUser.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Monto)
+                </td>
+                <td>
+                    @foreach (var v in item.Vales)
+                    {
+                        <a id="cobrosModal"
+                           data-toggle="modal"
+                           asp-controller="Vales"
+                           asp-action="ViewCobros"
+                           asp-route-id="@v.ValeId"
+                           data-target="#modal-action"
+                           class="btn">
+                            @Html.DisplayFor(modelItem => v.ValeId)
+                        </a>
+                    }
+                </td>
+                @*<td>
+            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+        </td>*@
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{await Html.RenderPartialAsync("_Filter", new FilterVM { Action = action, Controller = controller, Asc = _asc, Rpp = rpp, Srt = srt, Val = val });}
+    <script src="~/js/modal-action.js" asp-append-version="true"></script>
+    <script src="~/js/dinamicTable.js" asp-append-version="true"></script>
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+}
+
+@Html.Partial("_Modal", new BootstrapModel { ID = "modal-action", AreaLabeledId = "modal-action-label", Size = ModalSize.Medium })

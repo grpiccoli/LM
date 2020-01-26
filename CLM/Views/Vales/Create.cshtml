@@ -1,0 +1,210 @@
+﻿@model CLM.Models.ValeViewModel
+@using System.Reflection
+@using System.ComponentModel.DataAnnotations
+
+@{
+    ViewData["Title"] = "Nuevo Vale";
+}
+@section Styles{
+    <style>
+        span {
+            position: relative;
+            margin-right: -20px
+        }
+
+        input[type='number'] {
+            padding-left: 20px;
+            text-align: left;
+        }
+
+        input[type=number]::-webkit-outer-spin-button,
+        input[type=number]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+}
+
+<div class="container">
+    <h2>Crear Vale</h2>
+    <hr />
+    <form id="vale" asp-action="Create" class="form-horizontal">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="ClienteId" class="control-label col-lg-4 col-md-6"></label>
+            <div class="col-lg-4 col-md-6">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fas fa-user"></i></span>
+                    <select id="clientes" title="Seleccione Cliente" asp-for="ClienteId" data-width="100%" class="form-control selectpicker" data-live-search="true" asp-items="Model.ClientesList"></select>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-lg-4 col-md-6">Cobros</label>
+            <div class="col-lg-4 col-md-6">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="far fa-money-bill-alt"></i></span>
+                    <select id="cobros" title="Seleccione Cobros" data-width="100%" data-actions-box="true"
+                            data-selected-text-format="count > 3" class="form-control selectpicker"
+                            multiple data-live-search="true" asp-items="Model.HonorariosList"></select>
+                </div>
+            </div>
+        </div>
+        @{var i = 0; }
+        @foreach (var h in Model.HonorariosList)
+        {
+            <div id="@h.Value" class="form-group row hidden honorario">
+                <input asp-for="@Model.Cobros[i].Honorario" readonly="readonly" hidden value="@h.Value" />
+                <label class="control-label col-lg-4 col-md-6">@h.Text</label>
+                <div class="col-lg-4 col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fas fa-dollar-sign"></i></span>
+                        <input asp-for="@Model.Cobros[i].Monto" min="0" readonly="readonly" class="form-control @h.Value cobro monto currency number input-lg" />
+                    </div>
+                </div>
+            </div>
+            i++;
+        }
+        <div class="form-group">
+            <label asp-for="SubTotal" class="control-label col-lg-4 col-md-6"></label>
+            <div class="col-lg-4 col-md-6">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fas fa-dollar-sign"></i></span>
+                    <input asp-for="SubTotal" min="0" class="form-control subtotal currency number input-lg" readonly />
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="SaldosPendientes" class="control-label col-lg-4 col-md-6"></label>
+            <div class="col-lg-4 col-md-6">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fas fa-dollar-sign"></i></span>
+                    <input asp-for="SaldosPendientes" min="0" class="form-control SaldosPendientes monto currency number input-lg" readonly />
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Total" class="control-label col-lg-4 col-md-6"></label>
+            <div class="col-lg-4 col-md-6">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fas fa-dollar-sign"></i></span>
+                    <input asp-for="Total" min="0" class="form-control total currency number input-lg" readonly />
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-lg-4 col-md-6"></label>
+            <div class="col-lg-4 col-md-6">
+                <input type="submit" class="btn btn-block btn-primary" value="Emitir Vale Caja" />
+            </div>
+        </div>
+    </form>
+    <div>
+        <a class="btn btn-default" asp-action="Index"><i class="fas fa-arrow-left fa-fw"></i>Volver a listado de Vales</a>
+    </div>
+    <br />
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $('form#vale').submit(function (e) {
+            checkClientSelected();
+            $('select#cobros option:selected').each(function () {
+                if ($('.' + this.value.toString())[0].value == "") {
+                    alert('Cobro ' + this.value + ' está en blanco');
+                    e.preventDefault();
+                    return;
+                }
+            });
+        });
+        function checkClientSelected() {
+            if ($('select#clientes').val() == '') {
+                alert("Por favor elija un Cliente primero");
+                $('.selectpicker#cobros').selectpicker('deselectAll');
+                return;
+            }
+        }
+        $(function () {
+            $('select#clientes').on('change', function () {
+                $('.selectpicker#cobros').selectpicker('deselectAll');
+                $('.monto').val('');
+                getValue("SaldosPendientes");
+                setDisabled("Mensuales");
+                setDisabled("Laborales");
+                setDisabled("Renta");
+                setDisabled("Retención");
+            });
+
+            $('select#cobros').on('change', function () {
+                checkClientSelected();
+                $("select#cobros option").each(function () {
+                    if (this.selected) {
+                        $('div#' + this.value).removeClass('hidden');
+                        if (this.value === "Mensuales" || this.value === "Laborales" || this.value === "Renta" || this.value === "Retención") {
+                            getValue(this.value);
+                        } else {
+                            $('input.' + this.value).prop("readonly", false);
+                        }
+                    } else {
+                        $('input.' + this.value).val('');
+                        $('div#' + this.value).addClass('hidden');
+                    }
+                });
+                getTotal('cobro', 'subtotal');
+                getTotal('monto', 'total');
+            });
+
+            $('input').keyup(function () {
+                var selection = window.getSelection().toString();
+                if (selection !== '') {
+                    return;
+                }
+                var input = $(this).val().replace(/[\D\s\._\-]+/g, "");
+                input = input ? parseInt(input) : 0;
+                getTotal('cobro','subtotal');
+                getTotal('monto','total');
+                $(this).val(
+                    function () {
+                        return (input === 0) ? "" : input.toLocaleString("es-CL");
+                    });
+            });
+        });
+        function getPagosUrl(name) {
+            var rut = $('select#clientes').val();
+            var rutId = '@Url.Action("GetPagosCliente","Vales", new { id = "RUTID", name = "NAME" })';
+            return rutId.replace("RUTID", rut).replace("NAME", name.replace("ó", "o").replace(" ", ""));
+        }
+
+        function setDisabled(name) {
+            rutId = getPagosUrl(name);
+            $.get(rutId, {}, function (r) {
+                if (r.monto === null) {
+                    $('select#cobros option[value="' + name + '"]').attr('disabled', 'disabled');
+                } else {
+                    $('select#cobros option[value="' + name + '"]').removeAttr('disabled');
+                }
+                $('select#cobros').selectpicker("refresh");
+            });
+        }
+
+        function getValue(name) {
+            rutId = getPagosUrl(name);
+            $.get(rutId, {}, function (r) {
+                $("input." + name).val(r.monto.toLocaleString("es-CL"));
+                $("div#" + name).removeClass("hidden");
+                getTotal('cobro', 'subtotal');
+                getTotal('monto', 'total');
+            });
+        }
+        function getTotal(i, s) {
+            var inputs = $('.' + i);
+            var total = 0;
+            for (var i = 0; i < inputs.length; i++) {
+                if (inputs[i].value === '') { continue; }
+                total += parseInt(inputs[i].value.replace(/\./g, ""));
+            }
+            $('.' + s).val(total.toLocaleString("es-CL"));
+        }
+    </script>
+}

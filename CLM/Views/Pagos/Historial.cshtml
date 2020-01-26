@@ -1,0 +1,145 @@
+﻿@model CLM.Models.ViewModels.HistorialPagoVM
+
+@await Html.PartialAsync("_ClientSelectPartial", new CLM.Models.ViewModels.ClientSelectPartial
+{
+ClienteId = Model.ClienteId ?? 0,
+ClientesList = Model.ClientesList
+})
+
+@if (Model.Pagos.Any())
+{
+    ViewData["Title"] = "Pagos";
+    var lng = Model.Pagos.Count().ToString().Length;
+    var id = ViewContext.RouteData.Values["id"];
+    var rpp = ViewData["rpp"];
+    var pg = ViewData["pg"] as string;
+    var asc = ViewData["asc"] as string;
+    var srt = ViewData["srt"] as string;
+    var last = ViewData["last"] as string;
+    var _asc = Convert.ToBoolean(asc);
+    var first = Model.Pagos.First();
+
+    @section Styles{
+        <link rel="stylesheet" href="~/css/dinamicTable.css" />
+    }
+
+    @await Html.PartialAsync("_Paging", new CLM.Models.ViewModels.PagingPartial
+{
+    Pg = Convert.ToInt32(pg),
+    Action = "Index",
+    Asc = _asc,
+    Controller = "Vales",
+    Last = Convert.ToInt32(last),
+    Rpp = Convert.ToInt32(rpp),
+    Srt = srt
+})
+
+    <div id="constrainer2">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="sorting@(srt == "Id" ? _asc ? "_asc" : "_desc" : "")">
+                        <a style="color:black"
+                           asp-route-rpp="@rpp"
+                           asp-route-srt="Id"
+                           asp-route-asc="@(_asc ? "false" : "true")">
+                            @Html.DisplayNameFor(model => first.Id)
+                        </a>
+                    </th>
+                    <th class="sorting@(srt == "ApplicationUserId" ? _asc ? "_asc" : "_desc" : "")">
+                        <a style="color:black"
+                           asp-route-rpp="@rpp"
+                           asp-route-srt="Id"
+                           asp-route-asc="@(_asc ? "false" : "true")">
+                            @Html.DisplayNameFor(model => first.ApplicationUserId)
+                        </a>
+                    </th>
+                    <th class="sorting@(srt == "Monto" ? _asc ? "_asc" : "_desc" : "")">
+                        <a style="color:black"
+                           asp-route-rpp="@rpp"
+                           asp-route-srt="Id"
+                           asp-route-asc="@(_asc ? "false" : "true")">
+                            @Html.DisplayNameFor(model => first.Monto)
+                        </a>
+                    </th>
+                    <th class="sorting@(srt == "Medio" ? _asc ? "_asc" : "_desc" : "")">
+                        <a style="color:black"
+                           asp-route-rpp="@rpp"
+                           asp-route-srt="Id"
+                           asp-route-asc="@(_asc ? "false" : "true")">
+                            @Html.DisplayNameFor(model => first.Medio)
+                        </a>
+                    </th>
+                    <th class="sorting@(srt == "Vales" ? _asc ? "_asc" : "_desc" : "")">
+                        <a style="color:black"
+                           asp-route-rpp="@rpp"
+                           asp-route-srt="Id"
+                           asp-route-asc="@(_asc ? "false" : "true")">
+                            @Html.DisplayNameFor(model => first.Vales)
+                        </a>
+                    </th>
+                    @*@foreach(var cobro in Honorario)
+                        {
+
+                        }*@
+                    @*<th></th>*@
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Pagos)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Id)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ApplicationUser.UserName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Monto)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Medio)
+                        </td>
+                        <td>
+                            @foreach (var v in item.Vales)
+                            {
+                                <a id="cobrosModal"
+                                   data-toggle="modal"
+                                   asp-controller="Vales"
+                                   asp-action="ViewCobros"
+                                   asp-route-id="@v.ValeId"
+                                   data-target="#modal-action"
+                                   class="btn">
+                                    @Html.DisplayFor(modelItem => v.ValeId)
+                                </a>
+                            }
+                        </td>
+                        @*<td>
+                                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                            </td>*@
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @Html.Partial("_Modal", new BootstrapModel { ID = "modal-action", AreaLabeledId = "modal-action-label", Size = ModalSize.Medium })
+}
+else
+{
+    @Html.RenderPartialAsync("_StatusMessage", "ERROR: No hay pagos registrados en la base de datos. Por favor seleccione otro cliente")
+}
+
+@section Scripts{
+    <script src="~/js/modal-action.js" asp-append-version="true"></script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $("select#ClienteId").on("change", function () {
+            var path = window.location.pathname + "?id=" + $("select#ClienteId").find(":selected").val();
+            window.location.href = path;
+        })
+    </script>
+}

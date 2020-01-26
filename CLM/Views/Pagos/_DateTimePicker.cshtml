@@ -1,0 +1,45 @@
+﻿@model string
+
+<script>
+        $(function () {
+            var availableDate = [@Html.Raw(Model)];
+
+            function available(date) {
+                ymd = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+                if ($.inArray(ymd, availableDate) != -1) {
+                    return [true, "", "Available"];
+                } else {
+                    return [false, "", "unAvailable"]
+                }
+            }
+
+            $("#FechaTransferencia").datepicker({
+                minDate: 0,
+                showOtherMonths: true,
+                selectOtherMonths: true,
+                showButtonPanel: true,
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: "dd-mm-yy",
+            });
+            $("#FechaTransferencia").datepicker($.datepicker.regional["es"]);
+
+            $("#Fecha").datepicker({
+                maxDate: 0,
+                showOtherMonths: true,
+                selectOtherMonths: true,
+                showButtonPanel: true,
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: "dd-mm-yy",
+                beforeShowDay: available
+            });
+            $("#Fecha").datepicker($.datepicker.regional["es"]);
+        });
+        $("#btnFecha").click(function () {
+            $("#Fecha").datepicker('show')
+        });
+        $("#btnFechaTransferencia").click(function () {
+            $("#FechaTransferencia").datepicker('show')
+        });
+</script>

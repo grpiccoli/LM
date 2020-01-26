@@ -1,0 +1,139 @@
+﻿@model CLM.Models.ViewModels.HistorialPagoVM
+
+@{
+    ViewData["Title"] = "Detalles";
+}
+
+<div class="container">
+    <form asp-action="Details" class="form-horizontal">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="ClienteId" class="control-label col-lg-4 col-md-6"></label>
+            <div class="col-lg-6 col-md-6">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fas fa-user"></i></span>
+                    <select title="Seleccione un cliente"
+                            data-width="100%"
+                            class="selectpicker form-control"
+                            data-live-search="true"
+                            data-size="5"
+                            asp-for="ClienteId"
+                            asp-items="Model.ClientesList"></select>
+                </div>
+                <span asp-validation-for="ClienteId" class="text-danger"></span>
+            </div>
+        </div>
+    </form>
+</div>
+
+@if (Model.Cliente != null)
+{
+    <h2>Detalles</h2>
+
+    <div>
+        <h4>Cliente</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Cliente.Name)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Cliente.Name)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Cliente.Mensuales)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Cliente.Mensuales)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Cliente.Laborales)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Cliente.Laborales)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Cliente.Renta)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Cliente.Renta)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Cliente.Retencion)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Cliente.Retencion)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Cliente.NoCliente)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Cliente.NoCliente)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Cliente.FechaIngreso)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Cliente.FechaIngreso)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Cliente.Phone)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Cliente.Phone)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Cliente.Email)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Cliente.Email)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Cliente.Tipo)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Cliente.Tipo)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Cliente.Address)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Cliente.Address)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Cliente.ClaveFE)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Cliente.ClaveFE)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Cliente.ClaveSII)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Cliente.ClaveSII)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Cliente.Comuna)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Cliente.Comuna.Name)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Cliente.GirosCliente)
+            </dt>
+            <dd>
+                @*@String.Join("&#013", giros)*@
+            </dd>
+        </dl>
+    </div>
+}
+
+@section Scripts{ 
+    <script>
+        $('select').on('change', function () {
+            var url = '@Html.Raw(Url.Action("Details", "Clientes", new { id = "RUT" }))';
+            url = url.replace("RUT",$(this).val());
+            window.location.href = url;
+        });
+    </script>
+}

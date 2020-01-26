@@ -1,0 +1,10 @@
+﻿@model CLM.Models.Vale
+@using CLM.Models.ViewModels
+
+<form asp-action="Delete">
+    @Html.Partial("_ModalHeader", new ModalHeader { Heading = "Eliminar Vale Caja" })
+    <div class="modal-body form-horizontal">
+        ¿Está seguro que desea borrar el Vale caja número @Model.Id?
+    </div>
+    @Html.Partial("_ModalFooter", new ModalFooter { SubmitButtonText = "Eliminar" })
+</form>

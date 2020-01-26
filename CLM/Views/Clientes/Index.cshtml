@@ -1,0 +1,453 @@
+﻿@model IEnumerable<CLM.Models.Cliente>
+@using CLM.Models.ViewModels
+@using CLM.Models
+@using CLM.Services
+
+@{
+    ViewData["Title"] = "Clientes";
+    var lng = Model.Count().ToString().Length;
+    var id = ViewContext.RouteData.Values["id"];
+    var rpp = ViewData["rpp"] as string;
+    var pg = ViewData["pg"] as string;
+    var asc = ViewData["asc"] as string;
+    var srt = ViewData["srt"] as string;
+    var last = ViewData["last"] as string;
+    var _asc = Convert.ToBoolean(asc);
+    var saldo = ViewData["saldo"] as string;
+    var Filters = ViewData["Filters"] as IDictionary<string, List<string>>;
+    var val = ViewData["val"] as string;
+    var _saldo = Convert.ToBoolean(saldo);
+    var controller = this.ViewContext.RouteData.Values["controller"].ToString();
+    var action = this.ViewContext.RouteData.Values["action"].ToString();
+}
+
+@section Styles{
+    <link rel="stylesheet" href="~/css/dinamicTable.css" />
+}
+<div class="beforeDT row">
+    <div class="col-lg-2 col-md-4 col-sm-12 col-xs-12">
+        <h1>@ViewData["Title"]</h1>
+    </div>
+    <div class="col-lg-3 col-md-4 col-sm-12 col-xs-12">
+        <label class="checkbox-inline">
+            <input id="deudores" type="checkbox" data-toggle="toggle" data-on="Deudores" data-off="Todos" @(_saldo ? "checked" : "")><strong>Filtrar solo acreedores</strong>
+        </label>
+    </div>
+
+    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-3">
+        @await Html.PartialAsync("_ClearFilters", Url.RouteUrl(this.ViewContext.RouteData.Values))
+    </div>
+    <div class="col-lg-6 col-md-3 col-sm-11 col-xs-9">
+        <p>
+            <a class="btn btn-block btn-primary" asp-action="Create">Añadir Cliente</a>
+        </p>
+    </div>
+
+    @await Html.PartialAsync("_Paging", new PagingPartial
+    {
+        Pg = Convert.ToInt32(pg),
+        Action = action,
+        Asc = _asc,
+        Controller = controller,
+        Last = Convert.ToInt32(last),
+        Rpp = Convert.ToInt32(rpp),
+        Srt = srt,
+        Saldo = _saldo
+    })
+</div>
+<div id="constrainer2">
+    <table class="table">
+        <thead>
+            <tr>
+                <th colspan="5">
+                    Datos Personales
+                </th>
+                <th colspan="5">
+                    Datos Tributarios
+                </th>
+                <th colspan="4">
+                    Honorarios
+                </th>
+                <th colspan="3">
+                    @await Html.PartialAsync("_TableFilter", new TableFilterVM
+                    {
+                        //fixed
+                        Srt = srt,
+                        Asc = _asc,
+                        Rpp = rpp,
+                        Controller = controller,
+                        Action = action,
+                        //config
+                        Id = "SaldosPendientes",
+                        Name = Html.DisplayNameFor(model => model.SaldosPendientes)
+                    })
+                </th>
+                <th rowspan="2">
+                    @await Html.PartialAsync("_TableFilter", new TableFilterVM
+                    {
+                        //fixed
+                        Srt = srt,
+                        Asc = _asc,
+                        Rpp = rpp,
+                        Controller = controller,
+                        Action = action,
+                        //config
+                        Id = "NoCliente",
+                        Name = Html.DisplayNameFor(model => model.NoCliente)
+                    })
+                </th>
+                <th rowspan="2">
+                    @await Html.PartialAsync("_TableFilter",new TableFilterVM
+               {
+                   //fixed
+                   Srt = srt,
+                   Asc = _asc,
+                   Rpp = rpp,
+                   Controller = controller,
+                   Action = action,
+                   //config
+                   Id = "FechaIngreso",
+                   Val = Filters.ContainsKey("FechaIngreso") ? Filters["FechaIngreso"].First() : Html.DisplayNameFor(model => model.FechaIngreso),
+                   Name = Html.DisplayNameFor(model => model.FechaIngreso),
+                   Type = FilterType.date
+               })
+                </th>
+                <th rowspan="2">
+                    Acciones
+                </th>
+            </tr>
+            <tr>
+                <th>
+                    @await Html.PartialAsync("_TableFilter",new TableFilterVM
+                    {
+                        //fixed
+                        Srt = srt,
+                        Asc = _asc,
+                        Rpp = rpp,
+                        Controller = controller,
+                        Action = action,
+                        //config
+                        Id = "Id",
+                        Name = Html.DisplayNameFor(model => model.Id)
+                    })
+                </th>
+                <th>
+                    @await Html.PartialAsync("_TableFilter",new TableFilterVM
+                    {
+                        //fixed
+                        Srt = srt,
+                        Asc = _asc,
+                        Rpp = rpp,
+                        Controller = controller,
+                        Action = action,
+                        //config
+                        Id = "Name",
+                        Name = Html.DisplayNameFor(model => model.Name)
+                    })
+                </th>
+                <th>
+                    @await Html.PartialAsync("_TableFilter",new TableFilterVM
+                    {
+                        //fixed
+                        Srt = srt,
+                        Asc = _asc,
+                        Rpp = rpp,
+                        Controller = controller,
+                        Action = action,
+                        //config
+                        Id = "Phone",
+                        Name = Html.DisplayNameFor(model => model.Phone)
+                    })
+                </th>
+                <th>
+                    @await Html.PartialAsync("_TableFilter",new TableFilterVM
+                    {
+                        //fixed
+                        Srt = srt,
+                        Asc = _asc,
+                        Rpp = rpp,
+                        Controller = controller,
+                        Action = action,
+                        //config
+                        Id = "Email",
+                        Name = Html.DisplayNameFor(model => model.Email)
+                    })
+                </th>
+                <th>
+                    @await Html.PartialAsync("_TableFilter",new TableFilterVM
+               {
+                   //fixed
+                   Srt = srt,
+                   Asc = _asc,
+                   Rpp = rpp,
+                   Controller = controller,
+                   Action = action,
+                   //config
+                   Id = "Tipo",
+                   Name = Html.DisplayNameFor(model => model.Tipo),
+                   MaxOptions = Enum.GetNames(typeof(Tipo)).Length,
+                   Type = FilterType.select
+               })
+                </th>
+                <th>
+                    @await Html.PartialAsync("_TableFilter",new TableFilterVM
+                    {
+                        //fixed
+                        Srt = srt,
+                        Asc = _asc,
+                        Rpp = rpp,
+                        Controller = controller,
+                        Action = action,
+                        //config
+                        Id = "Address",
+                        Name = Html.DisplayNameFor(model => model.Address)
+                    })
+                </th>
+                <th>
+                    @await Html.PartialAsync("_TableFilter",new TableFilterVM
+               {
+                   //fixed
+                   Srt = srt,
+                   Asc = _asc,
+                   Rpp = rpp,
+                   Controller = controller,
+                   Action = action,
+                   //config
+                   Id = "Comuna",
+                   Name = Html.DisplayNameFor(model => model.Comuna),
+                   MaxOptions = 10,
+                   LiveSearch = true,
+                   Type = FilterType.select
+               })
+                </th>
+                <th>
+                    @await Html.PartialAsync("_TableFilter",new TableFilterVM
+               {
+                   //fixed
+                   Srt = srt,
+                   Asc = _asc,
+                   Rpp = rpp,
+                   Controller = controller,
+                   Action = action,
+                   //config
+                   Id = "GirosCliente",
+                   Name = Html.DisplayNameFor(model => model.GirosCliente),
+               })
+                </th>
+                <th>
+                    @await Html.PartialAsync("_TableFilter",new TableFilterVM
+                    {
+                        //fixed
+                        Srt = srt,
+                        Asc = _asc,
+                        Rpp = rpp,
+                        Controller = controller,
+                        Action = action,
+                        //config
+                        Id = "ClaveFE",
+                        Name = Html.DisplayNameFor(model => model.ClaveFE)
+                    })
+                </th>
+                <th>
+                    @await Html.PartialAsync("_TableFilter",new TableFilterVM
+                    {
+                        //fixed
+                        Srt = srt,
+                        Asc = _asc,
+                        Rpp = rpp,
+                        Controller = controller,
+                        Action = action,
+                        //config
+                        Id = "ClaveSII",
+                        Name = Html.DisplayNameFor(model => model.ClaveSII)
+                    })
+                </th>
+                <th>
+                    @await Html.PartialAsync("_TableFilter",new TableFilterVM
+                    {
+                        //fixed
+                        Srt = srt,
+                        Asc = _asc,
+                        Rpp = rpp,
+                        Controller = controller,
+                        Action = action,
+                        //config
+                        Id = "Mensuales",
+                        Name = Html.DisplayNameFor(model => model.Mensuales)
+                    })
+                </th>
+                <th>
+                    @await Html.PartialAsync("_TableFilter",new TableFilterVM
+                    {
+                        //fixed
+                        Srt = srt,
+                        Asc = _asc,
+                        Rpp = rpp,
+                        Controller = controller,
+                        Action = action,
+                        //config
+                        Id = "Laborales",
+                        Name = Html.DisplayNameFor(model => model.Laborales)
+                    })
+                </th>
+                <th>
+                    @await Html.PartialAsync("_TableFilter",new TableFilterVM
+                    {
+                        //fixed
+                        Srt = srt,
+                        Asc = _asc,
+                        Rpp = rpp,
+                        Controller = controller,
+                        Action = action,
+                        //config
+                        Id = "Renta",
+                        Name = Html.DisplayNameFor(model => model.Renta)
+                    })
+                </th>
+                <th>
+                    @await Html.PartialAsync("_TableFilter",new TableFilterVM
+                    {
+                        //fixed
+                        Srt = srt,
+                        Asc = _asc,
+                        Rpp = rpp,
+                        Controller = controller,
+                        Action = action,
+                        //config
+                        Id = "Retencion",
+                        Name = Html.DisplayNameFor(model => model.Retencion)
+                    })
+                </th>
+                <th>
+                    Detalle Saldos
+                </th>
+                <th>
+                    Detalle Montos
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @String.Format(new InterceptProvider(), "{0:U}", item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        <a href="tel:@Html.DisplayFor(modelItem => item.Phone)">@Html.DisplayFor(modelItem => item.Phone)</a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Tipo)
+                    </td>
+                    <td>
+                        <a target="_blank"
+                           href="https://www.google.com/maps/place/@Html.DisplayFor(modelItem => item.Address)">
+                            @Html.DisplayFor(modelItem => item.Address)
+                        </a>
+                    </td>
+                    <td>
+                        <a target="_blank"
+                           href="https://www.google.com/maps/place/@Html.DisplayFor(modelItem => item.Comuna.Name)">
+                            @Html.DisplayFor(modelItem => item.Comuna.Name)
+                        </a>
+                    </td>
+                    <td>
+                        @{
+                            var giros = new List<string>();
+                            foreach (var giro in item.GirosCliente)
+                            {
+                                giros.Add(giro.Giro.Id + "<br/>" + giro.Giro.Name);
+                            }
+                        }
+                        @Html.Raw(String.Join("<br/><br/>", giros));
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ClaveFE)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ClaveSII)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Mensuales)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Laborales)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Renta)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Retencion)
+                    </td>
+                    @{
+                        var pendientes = item.Vales
+                          .Where(v => v.State == State.Pendiente || v.State == State.Activo);
+                        var ids = new List<string> { };
+                        var montos = new List<string> { };
+                        if (pendientes.Any())
+                        {
+                            foreach (var vale in pendientes
+                              .OrderBy(v => v.Date))
+                            {
+                                ids.Add($@"<a id=""cobrosModal"" data-toggle=""modal"" data-target=""#modal-action"" href=""{Url.Action("ViewCobros", "Vales", new { id = vale.Id })}"">Vale <i class=""fas fa-hashtag""></i>{vale.Id}</a>");
+                                montos.Add((vale.SubTotal - vale.Pagado).ToString("N0"));
+                            }
+                            var i = (int)Math.Ceiling((double)(item.SaldosPendientes.ToString("N0").Length - montos.Last().Length) / 2);
+                            var sp = new String('x', i).Replace("x", "&emsp;");
+                            montos[montos.Count() - 1] = string.Format("<u>+x{0}</u>", montos.Last()).Replace("x", sp);
+                        }
+                    }
+                    <td style="text-align:right">
+                        @Html.Raw(String.Join("<br/>", ids))
+                    </td>
+                    <td style="text-align:right">
+                        @Html.Raw(String.Join("<br/>", montos))<br />
+                        <strong>@Html.DisplayFor(modelItem => item.SaldosPendientes)</strong>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NoCliente)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FechaIngreso)
+                    </td>
+                    <td class="text-right">
+                        <a class="btn btn-block btn-warning" asp-action="Edit" asp-route-id="@item.Id">
+                            <i class="fas fa-edit fa-fw"></i>Editar
+                        </a>
+                        @*<a class="btn btn-block btn-info" asp-action="Details" asp-route-id="@item.Id">Detalles</a>*@
+                        <a class="btn btn-block btn-danger" asp-action="Delete" asp-route-id="@item.Id"><i class="fas fa-trash-alt fa-fw"></i>Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{await Html.RenderPartialAsync("_Filter", new FilterVM { Action = action, Controller = controller, Asc = _asc, Rpp = rpp, Srt = srt, Val = val });}
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+    <script src="~/js/modal-action.js" asp-append-version="true"></script>
+    <script src="~/js/dinamicTable.js" asp-append-version="true"></script>
+    <script>
+        $('#deudores').change(function () {
+            var url;
+            if (this.checked) {
+                url = '@Html.Raw(Url.Action("Index","Clientes", new { pg, rpp, srt, asc, saldo = "True" }))';
+            } else {
+                url = '@Html.Raw(Url.Action("Index","Clientes", new { pg, rpp, srt, asc }))';
+            }
+            window.location.href = url;
+        });
+    </script>
+}
+
+@Html.Partial("_Modal", new BootstrapModel { ID = "modal-action", AreaLabeledId = "modal-action-label", Size = ModalSize.Medium })

@@ -1,0 +1,120 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <UserSecretsId>aspnet-CLM-938B2A83-0D30-4CE6-85F5-FDF17673B611</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Models\ViewModels\DisponibleOficinaVM.cs\**" />
+    <Content Remove="Models\ViewModels\DisponibleOficinaVM.cs\**" />
+    <EmbeddedResource Remove="Models\ViewModels\DisponibleOficinaVM.cs\**" />
+    <None Remove="Models\ViewModels\DisponibleOficinaVM.cs\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Data\Migrations\00000000000000_CreateIdentitySchema.cs" />
+    <Compile Remove="Data\Migrations\00000000000000_CreateIdentitySchema.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180309211319_Initial.cs" />
+    <Compile Remove="Data\Migrations\20180309211319_Initial.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180429021005_Initial.cs" />
+    <Compile Remove="Data\Migrations\20180429021005_Initial.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180429195321_Initial.cs" />
+    <Compile Remove="Data\Migrations\20180429195321_Initial.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180429214809_Initial.cs" />
+    <Compile Remove="Data\Migrations\20180429214809_Initial.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180429225140_Initial.cs" />
+    <Compile Remove="Data\Migrations\20180429225140_Initial.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180430002921_Initial.cs" />
+    <Compile Remove="Data\Migrations\20180430002921_Initial.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180430005215_Initial.cs" />
+    <Compile Remove="Data\Migrations\20180430005215_Initial.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180430214559_Initial.cs" />
+    <Compile Remove="Data\Migrations\20180430214559_Initial.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180430214844_Initial.cs" />
+    <Compile Remove="Data\Migrations\20180430214844_Initial.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180501045408_Initial.cs" />
+    <Compile Remove="Data\Migrations\20180501045408_Initial.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180501054318_Initial.cs" />
+    <Compile Remove="Data\Migrations\20180501054318_Initial.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180501190118_Initial.cs" />
+    <Compile Remove="Data\Migrations\20180501190118_Initial.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180501191149_Initial.cs" />
+    <Compile Remove="Data\Migrations\20180501191149_Initial.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180501191459_Initial.cs" />
+    <Compile Remove="Data\Migrations\20180501191459_Initial.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180501195536_Initial.cs" />
+    <Compile Remove="Data\Migrations\20180501195536_Initial.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180501195749_Initial.cs" />
+    <Compile Remove="Data\Migrations\20180501195749_Initial.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180501200225_Initial.cs" />
+    <Compile Remove="Data\Migrations\20180501200225_Initial.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180502170219_Initial.cs" />
+    <Compile Remove="Data\Migrations\20180502170219_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180503010833_Initial.cs" />
+    <Compile Remove="Migrations\20180503010833_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180503195139_Initial.cs" />
+    <Compile Remove="Migrations\20180503195139_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180505001900_Initial.cs" />
+    <Compile Remove="Migrations\20180505001900_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180505002443_Initial.cs" />
+    <Compile Remove="Migrations\20180505002443_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180508173623_Initial.cs" />
+    <Compile Remove="Migrations\20180508173623_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180510004711_Initial.cs" />
+    <Compile Remove="Migrations\20180510004711_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180516001937_Initial.cs" />
+    <Compile Remove="Migrations\20180516001937_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180517021122_Initial.cs" />
+    <Compile Remove="Migrations\20180517021122_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180517024051_Initial.cs" />
+    <Compile Remove="Migrations\20180517024051_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180517215844_Initial.cs" />
+    <Compile Remove="Migrations\20180517215844_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180517222057_Initial.cs" />
+    <Compile Remove="Migrations\20180517222057_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180520001522_Initial.cs" />
+    <Compile Remove="Migrations\20180520001522_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180520202352_Initial.cs" />
+    <Compile Remove="Migrations\20180520202352_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180520224500_Initial.cs" />
+    <Compile Remove="Migrations\20180520224500_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180521051319_Initial.cs" />
+    <Compile Remove="Migrations\20180521051319_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180521224352_Initial.cs" />
+    <Compile Remove="Migrations\20180521224352_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180522003809_Initial.cs" />
+    <Compile Remove="Migrations\20180522003809_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20180525072021_Initial.cs" />
+    <Compile Remove="Migrations\20180525072021_Initial.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HtmlAgilityPack" Version="1.6.10" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.1" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.1" PrivateAssets="All" />
+    <PackageReference Include="Sendgrid" Version="9.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\Migrations\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Views\Pagos\Historial.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Shared\_BoletaEmail.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Vales\Historial.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+  </ItemGroup>
+
+</Project>

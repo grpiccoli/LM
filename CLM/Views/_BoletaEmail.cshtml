@@ -1,0 +1,27 @@
+﻿@model BoletaEmail
+@using CLM.Models.ViewModels
+
+<div width="300">
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    BOLETA No
+                </td>
+                <td>
+                    @Model.Id
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    FECHA
+                </td>
+                <td>
+                    @Model.Fecha
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    @{await Html.RenderPartialAsync("_Datos");}
+    @{ await Html.RenderPartialAsync("_Detalle", new Detalle { Cobros = Model.Cobros, Emitidos = Model.Emitidos, Saldos = Model.Saldos, Total = Model.Total });}
+</div>

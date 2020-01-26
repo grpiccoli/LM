@@ -1,0 +1,23 @@
+﻿@model Vale
+@using CLM.Models
+@using CLM.Services
+
+
+@await Html.PartialAsync("_ModalHeader", new ModalHeader { Heading = "¡Vale caja emitido con éxito!" })
+<div>
+    Vale Caja Número @Model.Id
+</div>
+<div>
+    Cliente @Model.Cliente.Name  @String.Format(new InterceptProvider(), "{0:U}", Model.Cliente.Id)
+</div>
+<div>
+    Agregado por @Model.ApplicationUser.Name
+</div>
+<div>
+    Fecha @Model.Date
+</div>
+@await Html.PartialAsync("_ModalFooter", new ModalFooter { })
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
