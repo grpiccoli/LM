@@ -20,7 +20,7 @@ namespace CLM.Models
             {
                 if (!context.Users.Any())
                 {
-                    if (!context.ApplicationRole.Any())
+                    if (!context.ApplicationRole.Any())  
                     {
                         var applicationRoles = new List<ApplicationRole> { };
                         foreach (var item in RoleData.ApplicationRoles)
